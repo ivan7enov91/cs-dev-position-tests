@@ -9,10 +9,12 @@ namespace StringMultiplication
     {
         public static string Multiply(string value1, string value2)
         {
-            value1 = value1.TrimStart('0');
+            bool resultHasNegativeSign = value1.Contains("-") ^ value2.Contains("-");
+
+            value1 = value1.TrimStart('0').Replace("-", "");
             if(string.IsNullOrEmpty(value1)) 
                 value1 = "0";
-            value2 = value2.TrimStart('0');
+            value2 = value2.TrimStart('0').Replace("-", "");
             if (string.IsNullOrEmpty(value2))
                 value2 = "0";
 
@@ -50,7 +52,8 @@ namespace StringMultiplication
                 return "0";
 
             resultNumbers.Reverse();
-            return string.Join("", resultNumbers.Select(x => x.ToString())).TrimStart('0');
+            return (resultHasNegativeSign ? "-" : "") + 
+                string.Join("", resultNumbers.Select(x => x.ToString())).TrimStart('0');
         }
     }
 }
