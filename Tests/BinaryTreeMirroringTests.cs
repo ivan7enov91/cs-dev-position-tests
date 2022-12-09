@@ -18,12 +18,17 @@ namespace Tests
         [InlineData("1()(2()(3()()))", "1(2(3()())())()")]
         public void TestMirroring(string inputTreeStr, string expectedTreeStr)
         {
-            var treeUnderTest = ParseTree(inputTreeStr);
-            BTreeUtils.Mirror(treeUnderTest);
+            var testStrategies = new IBTreeMirrorStrategy[] { new BTreeMirrorRecursionStrategy(), new BTreeMirrorStackStrategy() };
 
-            var expectedTree = ParseTree(expectedTreeStr);
+            foreach(var strategy in testStrategies)
+            {
+                var treeUnderTest = ParseTree(inputTreeStr);
+                strategy.Mirror(treeUnderTest);
 
-            Assert.True(CheckBTreeEquals(treeUnderTest, expectedTree));
+                var expectedTree = ParseTree(expectedTreeStr);
+
+                Assert.True(CheckBTreeEquals(treeUnderTest, expectedTree), $"{strategy.GetType().Name} failed on tree {inputTreeStr}");
+            }
         }
 
         #region Вспомогательные методы
